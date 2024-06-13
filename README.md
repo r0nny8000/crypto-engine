@@ -33,7 +33,24 @@ $ touch cryp2bot/__init__.py
 $ poetry install
 ```
 
+Selected the python interpreter in VSCode to the one installed with poetry by using CMD+Shift+P and "Select Interpreter".
 
+It seems that this config file is not needed in .vscode/settings.json. The interpreter is selected automatically... sometimes.
+
+    {
+        "python.defaultInterpreterPath": "/Users/me/Library/Caches/pypoetry/virtualenvs/cryp2bot-????????-py3.12/bin/python"
+    }
+
+
+Created the first test for the bot.
+
+```bash
+$ mkdir tests
+$ touch tests/test_cryp2bot.py
+$ poetry add --group dev pytest
+$ poetry shell
+$ pytest
+```
 
 
 

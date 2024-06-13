@@ -8,6 +8,8 @@ Getting started
 
 To use the bot, you need to have Python 3.12 or higher installed on your system. You can download Python from the official website: https://www.python.org/downloads/ or use pyenv like described below in the log.
 
+Skip the poetry initialization if you already have a `pyproject.toml` file in your project. Just run the `poetry install` command to install the dependencies.
+
 
 Log
 ---
@@ -21,10 +23,16 @@ $ python --version
 Python 3.12.3
 ```
 
-Initialize poetry by using this commands
+Initialized poetry and intalled the dependecies. 
 
 ```bash
 $ poetry init
+$ mkdir cryp2bot
+$ touch cryp2bot/cryp2bot.py
+$ touch cryp2bot/__init__.py
+$ poetry install
+```
+
 
 
 

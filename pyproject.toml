@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "cryp2-bot"
+name = "cryp2bot"
 version = "0.1.0"
 description = "a bot to conquer the cryptovers"
 authors = ["r0nny8000 <r0nny8000@bea2b.de>"]

@@ -31,9 +31,11 @@ $ mkdir cryp2bot
 $ touch cryp2bot/cryp2bot.py
 $ touch cryp2bot/__init__.py
 $ poetry install
+$ poerry shell
+$ which python
 ```
 
-Selected the python interpreter in VSCode to the one installed with poetry by using CMD+Shift+P and "Select Interpreter".
+Set the python interpreter in VSCode to the version installed with poetry by using CMD+Shift+P and "Select Interpreter".
 
 It seems that this config file is not needed in .vscode/settings.json. The interpreter is selected automatically... sometimes.
 

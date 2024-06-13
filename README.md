@@ -21,6 +21,15 @@ $ python --version
 Python 3.12.3
 ```
 
+Initialize poetry by using this commands
+
+```bash
+$ poetry init
+
+
+
+
+
 
 
 

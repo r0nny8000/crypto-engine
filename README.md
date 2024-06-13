@@ -1,15 +1,12 @@
 CRYP2-BOT
 =========
 
-This is a simple bot for trading cryptocurrencies on different exchanges and defi protocols.
-
-
-
+This is a simple bot for trading crypto currencies on different exchanges and defi protocols.
  
 Getting started
 --------------- 
 
-To install the bot, you need to have Python 3.12 or higher installed on your system. You can download Python from the official website: https://www.python.org/downloads/ or use pyenv like described below in the log.
+To use the bot, you need to have Python 3.12 or higher installed on your system. You can download Python from the official website: https://www.python.org/downloads/ or use pyenv like described below in the log.
 
 
 Log

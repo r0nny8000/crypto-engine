@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cryp2-bot"
+version = "0.1.0"
+description = "a bot to conquer the cryptovers"
+authors = ["r0nny8000 <r0nny8000@bea2b.de>"]
+license = "GNU 3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

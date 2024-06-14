@@ -40,7 +40,7 @@ Set the python interpreter in VSCode to the version installed with poetry by usi
 It seems that this config file is not needed in .vscode/settings.json. The interpreter is selected automatically... sometimes.
 
     {
-        "python.defaultInterpreterPath": "/Users/me/Library/Caches/pypoetry/virtualenvs/cryp2bot-????????-py3.12/bin/python"
+        "python.defaultInterpreterPath": "/Users/me/Library/Caches/pypoetryvirtualenvs/cryp2bot-????????-py3.12/bin/python"
     }
 
 
@@ -55,6 +55,13 @@ $ pytest
 ```
 
 
+To make the bot executable from the command line, I added the following code to the `project.toml` file and added an install script for building and installing the package.
+
+```toml
+[tool.poetry.scripts]
+c2b = "cryp2bot.cryp2bot:main"
+
+```
 
 
 

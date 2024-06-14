@@ -3,7 +3,7 @@ name = "cryp2bot"
 version = "0.1.0"
 description = "a bot to conquer the cryptovers"
 authors = ["r0nny8000 <r0nny8000@bea2b.de>"]
-license = "GNU 3"
+license = "GPL-3.0-only"
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -13,6 +13,9 @@ requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
+
+[tool.poetry.scripts]
+c2b = "cryp2bot.cryp2bot:_main"
 
 [build-system]
 requires = ["poetry-core"]

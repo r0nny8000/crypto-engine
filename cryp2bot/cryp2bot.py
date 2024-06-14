@@ -29,4 +29,5 @@ def cryp2bot():
     return True
 
 if __name__ == "__main__":
+    click.echo(click.style("Hello, I am the cryp2 bot", fg="green"))
     cli() # Call the main function

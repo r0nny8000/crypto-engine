@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 requests = "^2.32.3"
+click = "^8.1.7"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -16,7 +17,7 @@ pytest = "^8.2.2"
 pylint = "^3.2.3"
 
 [tool.poetry.scripts]
-c2b = "cryp2bot.cryp2bot:main"
+c2b = "cryp2bot.cryp2bot:cli"
 
 [build-system]
 requires = ["poetry-core"]

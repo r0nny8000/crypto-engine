@@ -1,6 +1,7 @@
 """This is the cryp2bot module."""
 
 import click
+from cryp2bot.bitget.bitget import usebitget
 
 
 @click.group()
@@ -26,8 +27,15 @@ def com():
 @cli.command()
 def cryp2bot():
     """Function that returns True."""
-    click.echo("This is the cryp2bot function of the cryp2bot module.")
-    return True
+    click.echo("This is the cryp2bot function of the cryp2bot module. :-)))))")
+
+
+def usecryp2bot(a, b):
+    """Function that returns True."""
+    click.echo("This is the testtest function of the cryp2bot module.")
+    click.echo(f"Calling the usebitget function from the bitget module with a={a} and b={b}")
+    return usebitget(a, b)
+
 
 if __name__ == "__main__":
     click.echo(click.style("Hello, I am the cryp2 bot", fg="green"))

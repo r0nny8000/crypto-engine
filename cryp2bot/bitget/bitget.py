@@ -1,5 +1,4 @@
-
-
+"""A Bitget API wrapper for Python."""
 
 
 def usebitget(a, b):

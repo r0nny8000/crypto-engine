@@ -29,7 +29,9 @@ def cryp2bot():
     """Function that returns True."""
     click.echo("This is the cryp2bot function of the cryp2bot module. :-)))))")
 
-
+@cli.command()
+@click.option('--a', type=int)
+@click.option('--b', type=int)
 def usecryp2bot(a, b):
     """Function that returns True."""
     click.echo("This is the testtest function of the cryp2bot module.")

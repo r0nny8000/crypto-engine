@@ -1,7 +1,7 @@
 """This is the cryp2bot module."""
 
 import click
-from cryp2bot.kraken import marketdata
+from cryp2bot.kraken.marketdata import server_time
 
 
 @click.group()
@@ -15,7 +15,7 @@ def cli():
 def kraken(command):
     """Function that greets a person."""
     if command == "server_time":
-        marketdata.server_time()
+        server_time()
     else:
         click.echo(click.style("Unknown command", fg="red"))
 

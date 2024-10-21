@@ -1,42 +1,23 @@
 """This is the cryp2bot module."""
 
 import click
-from cryp2bot.bitget.bitget import usebitget
+from cryp2bot.kraken import marketdata
 
 
 @click.group()
 def cli():
     """add a group of commands to the command line interface."""
-    pass
+    pass # This is a no-op
 
 @cli.command()
-@click.option('--count', default=1, help='number of greetings')
-@click.argument('name')
-def hello(count, name):
+# @click.option('--count', default=1, help='number of greetings')
+@click.argument('command')
+def kraken(command):
     """Function that greets a person."""
-    for x in range(count):
-        click.echo(f"{x}. Hello {name}!")
-
-
-@cli.command()
-def com():
-    """Function that returns True."""
-    click.echo("This is the com function of the cryp2bot module.")
-    return True
-
-@cli.command()
-def cryp2bot():
-    """Function that returns True."""
-    click.echo("This is the cryp2bot function of the cryp2bot module. :-)))))")
-
-@cli.command()
-@click.option('--a', type=int)
-@click.option('--b', type=int)
-def usecryp2bot(a, b):
-    """Function that returns True."""
-    click.echo("This is the testtest function of the cryp2bot module.")
-    click.echo(f"Calling the usebitget function from the bitget module with a={a} and b={b}")
-    return usebitget(a, b)
+    if command == "server_time":
+        marketdata.server_time()
+    else:
+        click.echo(click.style("Unknown command", fg="red"))
 
 
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
 import requests
 
 
-def server_time():
-    """Get the server's time."""
-    url = "https://api.kraken.com/0/public/Time"
+def ticker(parameter):
+
+    url = "https://api.kraken.com/0/public/Ticker?pair=" + parameter
 
     payload = {}
     headers = {
@@ -12,4 +12,4 @@ def server_time():
 
     response = requests.request("GET", url, headers=headers, data=payload)
 
-    print("Server time: ", response.text)
+    print(response.text)

@@ -20,7 +20,7 @@ def ticker(pair):
     data = marketdata.ticker(pair)
 
 
-    if data is  None:
+    if data is None:
         click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
         return
     

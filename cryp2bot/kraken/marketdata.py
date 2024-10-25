@@ -1,7 +1,7 @@
 import requests
 import json
 
-def ticker(pair):
+def price(pair):
 
     
     url = "https://api.kraken.com/0/public/Ticker?pair=" + pair

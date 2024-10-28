@@ -1,10 +1,10 @@
 import requests
 import json
 
-def price(pair):
+def price(pairs):
 
     
-    url = "https://api.kraken.com/0/public/Ticker?pair=" + pair
+    url = "https://api.kraken.com/0/public/Ticker?pair=" + pairs
 
     payload = {}
     headers = {
@@ -21,5 +21,9 @@ def price(pair):
     key = list(response['result'].keys())[0]
     
     bid_price = response['result'][key]['b'][0]
-    print(f"The bid price for {pair} is {bid_price}")
-    return bid_price
+    print(f"The bid price for {pairs} is {bid_price}")
+
+    prices = {}
+
+    prices[key] = bid_price
+    return prices

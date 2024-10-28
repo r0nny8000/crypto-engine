@@ -10,14 +10,14 @@ def cli():
     pass # This is a no-op
 
 @cli.command()
-@click.argument('pair', required=True)
-def price(pair):
+@click.argument('pairs', required=True)
+def price(pairs):
     """Get the ticker information for a given pair."""
-    if pair is None or pair.strip() == "":
+    if pairs is None or pairs.strip() == "":
         click.echo(click.style("The pair argument is required.", fg="red"))
         return
     
-    data = marketdata.price(pair)
+    data = marketdata.price(pairs)
 
 
     if data is None:

@@ -17,26 +17,33 @@ def price(pairs):
         dict: A dictionary with currency pairs as keys and their bid prices as values.
     """
     
-    url = "https://api.kraken.com/0/public/Ticker?pair=" + pairs
+    url_ticker = "https://api.kraken.com/0/public/Ticker?pair=" + pairs
+    url_asset = "https://api.kraken.com/0/public/AssetPairs?pair=" + pairs
+
 
     payload = {}
     headers = {
         'Accept': 'application/json'
     }
 
-    response = requests.request("GET", url, headers=headers, data=payload, timeout=4).json()
+    ticker = requests.request("GET", url_ticker, headers=headers, data=payload, timeout=4).json()
+    assets = requests.request("GET", url_asset, headers=headers, data=payload, timeout=4).json()
+
+    if 'result' not in ticker:
+        return None
     
-    if 'result' not in response:
+    if 'result' not in assets:
         return None
     
     #print(json.dumps(response, indent=4))
     
-    keys = list(response['result'].keys())
+    keys = list(ticker['result'].keys())
 
     prices = {}
 
     for key in keys:
-        prices[key] = float(response['result'][key]['b'][0])
+        asset = assets['result'][key]['wsname'].replace('XBT', 'BTC')
+        prices[asset] = float(ticker['result'][key]['b'][0])
         
     
     return prices

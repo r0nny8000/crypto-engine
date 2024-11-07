@@ -25,7 +25,7 @@ def price(pairs):
 
     for pair in data:
         formatted_price = f"{data[pair]:.2f}"
-        click.echo(click.style(f"{pair}: \t{formatted_price.rjust(10)}", fg="green"))
+        click.echo(click.style(f"{pair}:", fg="white") + click.style(f"\t{formatted_price.rjust(10)}", fg="blue"))
 
 if __name__ == "__main__":
     cli()  # Call the main function

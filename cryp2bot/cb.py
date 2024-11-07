@@ -16,16 +16,16 @@ def price(pairs):
     if pairs is None or pairs.strip() == "":
         click.echo(click.style("The pair argument is required.", fg="red"))
         return
-    
-    data = marketdata.price(pairs)
 
+    data = marketdata.price(pairs)
 
     if data is None:
         click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
         return
-    
-    print(data)
+
+    for pair in data:
+        formatted_price = f"{data[pair]:.2f}"
+        click.echo(click.style(f"{pair}: \t{formatted_price.rjust(10)}", fg="green"))
 
 if __name__ == "__main__":
     cli()  # Call the main function
-

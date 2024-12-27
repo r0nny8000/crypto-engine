@@ -7,7 +7,7 @@ import cryp2bot.kraken.marketdata as marketdata
 @click.group()
 def cli():
     """add a group of commands to the command line interface."""
-    pass # This is a no-op
+
 
 @cli.command()
 @click.argument('pairs', required=True)

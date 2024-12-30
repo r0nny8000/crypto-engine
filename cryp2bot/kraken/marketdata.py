@@ -6,7 +6,7 @@ for given currency pairs from the Kraken public API.
 import json
 import requests
 
-def price(pairs):
+def value(currency):
     """
     Fetches and returns the bid prices for the given currency pairs from the Kraken public API.
 
@@ -17,6 +17,20 @@ def price(pairs):
         dict: A dictionary with currency pairs as keys and their bid prices as values.
     """
     
+    pairs = ""
+    print(currency)
+    for c in currency.split(','):
+
+        if len(pairs) > 0:
+            pairs += ","
+
+        pairs += c + "EUR" + "," + c + "USD"
+
+        if c.upper() != "BTC":
+            pairs += "," + c + "BTC"
+    
+    pairs = pairs.upper()
+
     url_ticker = "https://api.kraken.com/0/public/Ticker?pair=" + pairs
     url_asset = "https://api.kraken.com/0/public/AssetPairs?pair=" + pairs
 
@@ -39,11 +53,11 @@ def price(pairs):
     
     keys = list(ticker['result'].keys())
 
-    prices = {}
+    values = {}
 
     for key in keys:
         asset = assets['result'][key]['wsname'].replace('XBT', 'BTC')
-        prices[asset] = float(ticker['result'][key]['b'][0])
+        values[asset] = float(ticker['result'][key]['b'][0])
         
     
-    return prices
+    return values

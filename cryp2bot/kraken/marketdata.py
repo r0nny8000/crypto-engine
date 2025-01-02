@@ -10,7 +10,7 @@ import requests
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)-8s %(message)s')
 
-def value(currencies):
+def values(currencies):
     """
     Fetches and returns the bid prices for the given currency pairs from the Kraken public API.
 
@@ -60,25 +60,25 @@ def value(currencies):
         logging.error('Request failed: %s', e)
         return {}
 
-    values = {}
-    for key in response_ticker.get('result', {}):
-        asset_name = get_asset_name(key)
-        asset_value_name = get_asset_value_name(key)
-        asset_value = float(response_ticker['result'][key]['b'][0])
+    asset_values = {}
+    for pair in response_ticker.get('result', {}):
+        asset_name = get_asset_name(pair)
+        asset_value_name = get_asset_value_name(pair)
+        asset_value = float(response_ticker['result'][pair]['b'][0])
 
-        if asset_name not in values:
-            values[asset_name] = {}
+        if asset_name not in asset_values:
+            asset_values[asset_name] = {}
 
         if (asset_value_name == 'EUR' or asset_value_name == 'USD'):
             asset_value = round(asset_value, 2)
         else:
             asset_value = round(asset_value, 8)
 
-        values[asset_name][asset_value_name] = asset_value
+        asset_values[asset_name][asset_value_name] = asset_value
 
-    return values
+    return asset_values
 
-def get_asset_name(key):
+def get_asset_name(pair):
     """
     Extracts the asset name from the given assets dictionary.
 
@@ -88,12 +88,12 @@ def get_asset_name(key):
     Returns:
         str: The name of the asset before the '/' character in the 'wsname' field.
     """
-    asset = get_asset_data(key)
+    asset = get_asset_data(pair)
     if asset is None:
-        return key
-    return asset['result'][key]['wsname'][:asset['result'][key]['wsname'].find('/')].replace('XBT', 'BTC') # pylint: disable=line-too-long
+        return pair
+    return asset[pair]['wsname'][:asset[pair]['wsname'].find('/')].replace('XBT', 'BTC') # pylint: disable=line-too-long
 
-def get_asset_value_name(key):
+def get_asset_value_name(pair):
     """
     Extracts the asset value name from the given assets dictionary.
 
@@ -104,10 +104,10 @@ def get_asset_value_name(key):
         str: The name of the asset after the '/' character in the 'wsname' field, 
         with 'XBT' replaced by 'BTC'.
     """
-    asset = get_asset_data(key)
+    asset = get_asset_data(pair)
     if asset is None:
-        return key
-    value_name = asset['result'][key]['wsname']
+        return pair
+    value_name = asset[pair]['wsname']
     return value_name[value_name.find('/')+1:].replace('XBT', 'BTC')
 
 def get_asset_data(pair):
@@ -135,4 +135,4 @@ def get_asset_data(pair):
         logging.error("Request failed: %e", e)
         return None
 
-    return response_asset if 'result' in response_asset else None
+    return response_asset['result'] if 'result' in response_asset else None

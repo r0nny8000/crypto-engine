@@ -11,17 +11,11 @@ def cli():
 
 
 @cli.command()
-@click.argument('currency', required=True)
-def value(currency):
+@click.argument('currencies', required=True)
+def values(currencies):
     """Get the ticker information for a given currency."""
 
-    currency = currency.upper()
-
-    if currency is None or currency.strip() == "":
-        click.echo(click.style("The argument is required.", fg="red"))
-        return
-
-    data = marketdata.value(currency)
+    data = marketdata.values(currencies.upper())
 
     if data is None:
         click.echo(click.style("Failed to retrieve ticker information.", fg="red"))

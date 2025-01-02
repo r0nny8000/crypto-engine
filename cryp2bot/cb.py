@@ -1,8 +1,8 @@
 """This is the cryp2bot module."""
 
 import click
-import cryp2bot.kraken.marketdata as marketdata
 from tabulate import tabulate
+import cryp2bot.kraken.marketdata as marketdata
 
 
 @click.group()
@@ -14,7 +14,7 @@ def cli():
 @click.argument('currency', required=True)
 def value(currency):
     """Get the ticker information for a given currency."""
-    
+
     currency = currency.upper()
 
     if currency is None or currency.strip() == "":
@@ -29,7 +29,7 @@ def value(currency):
 
     # Prepare data for tabulate
     table = []
-    for key in data:
+    for key in data:  # pylint: disable=consider-using-dict-items
         row = [key]
         row.append(data[key].get("EUR", "-"))
         row.append(data[key].get("USD", "-"))
@@ -38,7 +38,13 @@ def value(currency):
         table.append(row)
 
     # Print table using tabulate
-    click.echo(tabulate(table, headers=["Currency", "EUR", "USD", "BTC", "ETH"]))
+    click.echo(
+        tabulate(
+            table,
+            headers=["Currency", "EUR", "USD", "BTC", "ETH"],
+            tablefmt="rounded_grid"
+        )
+    )
 
 if __name__ == "__main__":
     cli()  # Call the main function to start the command line interface.

@@ -13,9 +13,9 @@ def cli():
 @cli.command()
 @click.argument('currencies', required=True)
 def values(currencies):
-    """Get the ticker information for a given currency."""
+    """Get the values for a given currencies in USD, EUR, BTC and ETH (if available)."""
 
-    data = marketdata.values(currencies.upper())
+    data = marketdata.values(currencies)
 
     if data is None:
         click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
@@ -39,6 +39,19 @@ def values(currencies):
             tablefmt="rounded_grid"
         )
     )
+
+@cli.command()
+@click.argument('pair', required=True)
+def value(pair):
+
+    data = marketdata.value(pair)
+
+    if data is None:
+        click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
+        return
+
+    click.echo(data)
+
 
 if __name__ == "__main__":
     cli()  # Call the main function to start the command line interface.

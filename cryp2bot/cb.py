@@ -43,6 +43,15 @@ def values(currencies):
 @cli.command()
 @click.argument('pair', required=True)
 def value(pair):
+    """
+    Fetch and display the bid price for a given currency pair from the Kraken public API.
+
+    Args:
+        pair (str): A currency pair (e.g., 'BTCUSD').
+
+    Returns:
+        None: This function does not return a value. It prints the bid price to the console.
+    """
 
     data = marketdata.value(pair)
 

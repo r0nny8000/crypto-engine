@@ -4,7 +4,6 @@ for given currency pairs from the Kraken public API.
 """
 
 import logging
-import json
 import requests
 
 # Configure logging
@@ -19,7 +18,8 @@ def value(pair):
         pair (str): A currency pair.
 
     Returns:
-        float or None: The bid price for the currency pair, rounded to 2 decimal places, or None if the pair is invalid or the ticker information could not be retrieved.
+        float or None: The bid price for the currency pair, rounded to 2 decimal places, 
+        or None if the pair is invalid or the ticker information could not be retrieved.
     """
     if get_asset_data(pair) is None:
         logging.error("%s is not a valid currency pair.", pair)
@@ -30,32 +30,27 @@ def value(pair):
     if result is None:
         logging.error("Failed to retrieve ticker information.")
         return None
-    
+
     asset_value = 0.0
     for v in result.values():
         asset_value = float(v['b'][0])
     return round(asset_value, 2)
-
 
 def values(currencies):
     """
     Fetches and returns the bid prices for the given currency pairs from the Kraken public API.
 
     Args:
-        pairs (str): A comma-separated string of currency pairs.
+        currencies (str): A comma-separated string of currency pairs.
 
     Returns:
         dict: A dictionary with currency pairs as keys and their bid prices as values.
     """
-    
     pairs = ""
 
     for c in currencies.upper().split(','):
-
         for a in ["EUR", "USD", "BTC", "ETH"]:
-
             p = c + a
-
             if get_asset_data(p) is None:
                 logging.error("%s is not a valid currency pair.", p)
             else:
@@ -63,8 +58,10 @@ def values(currencies):
                     pairs += ","
                 pairs += p
 
-
     response = get_ticker(pairs)
+
+    if response is None:
+        return None
 
     asset_values = {}
 
@@ -76,7 +73,7 @@ def values(currencies):
         if asset_name_left not in asset_values:
             asset_values[asset_name_left] = {}
 
-        if (asset_name_right == 'EUR' or asset_name_right == 'USD'):
+        if asset_name_right in ['EUR', 'USD']:
             asset_value = round(asset_value, 2)
         else:
             asset_value = round(asset_value, 8)
@@ -114,11 +111,8 @@ def get_asset_name_right(pair):
     """
     asset = get_asset_data(pair)
     if asset is None:
-        return pair    
+        return pair
     return asset[pair]['wsname'][asset[pair]['wsname'].find('/')+1:].replace('XBT', 'BTC')
-
-    #value_name = asset[pair]['wsname']
-    #return value_name[value_name.find('/')+1:].replace('XBT', 'BTC')
 
 
 def get_asset_data(pair):
@@ -169,7 +163,7 @@ def get_ticker(pair):
 
     try:
         response = requests.get(url, headers=headers, timeout=4).json()
-        
+
         if len(response['error']) > 0:
             logging.error("Error: %s", response['error'])
 

@@ -12,6 +12,21 @@ files = [
 ]
 
 [[package]]
+name = "candlestick-chart"
+version = "3.1.0"
+description = "Draw candlesticks charts right into your terminal, using Python!"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "candlestick_chart-3.1.0-py3-none-any.whl", hash = "sha256:7c73336155292bd375fffc91410b00b7ff1cee93de7b6459b753151059aa9583"},
+    {file = "candlestick_chart-3.1.0.tar.gz", hash = "sha256:0721146baf2511adc404a735ce1111a297dde5b08e542883a89bfcd053e6284d"},
+]
+
+[package.extras]
+dev = ["build (==1.2.2.post1)", "twine (==5.1.1)"]
+test = ["mypy (==1.13.0)", "pytest (==8.3.3)", "pytest-cov (==6.0.0)", "requests (==2.32.3)", "rich (==13.9.4)", "ruff (==0.7.2)", "types-requests"]
+
+[[package]]
 name = "certifi"
 version = "2024.12.14"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -365,4 +380,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "94b877c8d0491fef5006dd81f5db26d22d0d1bbb1bf38da16faeca6dd5fe1dce"
+content-hash = "8825b07df3db9c7125db42ae50f9e9b8d3869cceeec3149046cf21f735b6f0b7"

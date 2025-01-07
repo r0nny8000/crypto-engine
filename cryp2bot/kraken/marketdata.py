@@ -82,6 +82,53 @@ def values(currencies):
 
     return asset_values
 
+def get_ohlc_data(pair, interval):
+    """
+    Fetches OHLC (Open, High, Low, Close) data for a given currency pair 
+    and interval from the Kraken API.
+
+    Args:
+        pair (str): The currency pair to fetch data for (e.g., 'XXBTZUSD').
+        interval (str): The interval for the OHLC data. Valid intervals are:
+                        '1m' (1 minute), '5m' (5 minutes), '15m' (15 minutes),
+                        '30m' (30 minutes), '1h' (1 hour), '4h' (4 hours),
+                        '1d' (1 day), '1w' (1 week), '2w' (2 weeks).
+    Returns:
+        dict: A dictionary containing the OHLC data if the request is successful.
+              Returns None if the currency pair is invalid or if the request fails.
+    Raises:
+        requests.RequestException: If there is an issue with the HTTP request.
+    """
+
+    if get_asset_data(pair) is None:
+        logging.error("%s is not a valid currency pair.", pair)
+        return None
+
+    intervals = {}
+
+    intervals['1m'] = 1
+    intervals['5m'] = 5
+    intervals['15m'] = 15
+    intervals['30m'] = 30
+    intervals['1h'] = 60
+    intervals['4h'] = 240
+    intervals['1d'] = 1440
+    intervals['1w'] = 10080
+    intervals['2w'] = 21600
+
+    url = "https://api.kraken.com/0/public/OHLC?pair=" + pair + "&interval=" + str(intervals[interval]) # pylint: disable=line-too-long
+
+    headers = {'Accept': 'application/json'}
+
+    try:
+        response = requests.get(url, headers=headers, timeout=4).json()
+    except requests.RequestException as e:
+        logging.error("Request failed: %e", e)
+        return None
+
+    return response
+
+
 def get_asset_name_left(pair):
     """
     Extracts the left part of the asset name from the given assets pair.

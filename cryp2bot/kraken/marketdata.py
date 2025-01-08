@@ -95,7 +95,9 @@ def get_ohlc_data(pair, interval):
                         '1d' (1 day), '1w' (1 week), '2w' (2 weeks).
     Returns:
         dict: An array containing the OHLC data if the request is successful.
+              [int <time>, string <open>, string <high>, string <low>, string <close>, string <vwap>, string <volume>, int <count>]
               Returns None if the currency pair is invalid or if the request fails.
+              
     Raises:
         requests.RequestException: If there is an issue with the HTTP request.
     """

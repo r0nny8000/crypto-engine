@@ -94,7 +94,7 @@ def get_ohlc_data(pair, interval):
                         '30m' (30 minutes), '1h' (1 hour), '4h' (4 hours),
                         '1d' (1 day), '1w' (1 week), '2w' (2 weeks).
     Returns:
-        dict: A dictionary containing the OHLC data if the request is successful.
+        dict: An array containing the OHLC data if the request is successful.
               Returns None if the currency pair is invalid or if the request fails.
     Raises:
         requests.RequestException: If there is an issue with the HTTP request.
@@ -126,7 +126,12 @@ def get_ohlc_data(pair, interval):
         logging.error("Request failed: %e", e)
         return None
 
-    return response
+    data = []
+    for v in response['result'].values():
+        data = v
+        break
+
+    return data
 
 
 def get_asset_name_left(pair):

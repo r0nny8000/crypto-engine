@@ -46,7 +46,8 @@ def values(currencies):
 @cli.command()
 @click.argument('pair', required=True)
 @click.option('--interval', '--i', show_default=True, default="1w", help="Display a candlestick chart for the given interval: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, 2w") # pylint: disable=line-too-long
-def chart(pair, interval):
+@click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.") # pylint: disable=line-too-long
+def chart(pair, interval, volume):
     """
     Generates and displays a candlestick chart for a given trading pair and interval.
 
@@ -58,11 +59,7 @@ def chart(pair, interval):
         None
     """
 
-    data = []
-
-    for v in marketdata.get_ohlc_data(pair, interval)['result'].values():
-        data = v
-        break
+    data = marketdata.get_ohlc_data(pair, interval)
 
     candles = []
     for d in data:
@@ -73,6 +70,7 @@ def chart(pair, interval):
     # Optional keyword arguments: title, width, height
     c = Chart(candles, title=pair.upper())
     c.update_size(shutil.get_terminal_size().columns - 2, shutil.get_terminal_size().lines - 6)  # pylint: disable=line-too-long
+    c.set_volume_pane_enabled(volume)
     c.draw()
 
 

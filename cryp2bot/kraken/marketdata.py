@@ -212,7 +212,7 @@ def get_ticker(pair):
         requests.RequestException: If there is an issue with the HTTP request.
     """
 
-    logging.info(pair)
+    logging.info("Fetching ticker data for %s...", pair)
     url = "https://api.kraken.com/0/public/Ticker?pair=" + pair
     headers = {'Accept': 'application/json'}
 
@@ -230,4 +230,5 @@ def get_ticker(pair):
         return None
 
     else:
+        logging.info("Ticker data fetched successfully.")
         return response['result'] if 'result' in response else None

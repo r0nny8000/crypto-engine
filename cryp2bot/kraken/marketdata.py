@@ -4,7 +4,10 @@ for given currency pairs from the Kraken public API.
 """
 
 import logging
-import requests
+
+from kraken.spot import Market
+from kraken.exceptions import * # pylint: disable=wildcard-import,unused-wildcard-import
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)-8s %(message)s')
@@ -108,7 +111,6 @@ def get_ohlc_data(pair, interval):
         return None
 
     intervals = {}
-
     intervals['1m'] = 1
     intervals['5m'] = 5
     intervals['15m'] = 15
@@ -119,18 +121,15 @@ def get_ohlc_data(pair, interval):
     intervals['1w'] = 10080
     intervals['2w'] = 21600
 
-    url = "https://api.kraken.com/0/public/OHLC?pair=" + pair + "&interval=" + str(intervals[interval]) # pylint: disable=line-too-long
-
-    headers = {'Accept': 'application/json'}
-
     try:
-        response = requests.get(url, headers=headers, timeout=4).json()
-    except requests.RequestException as e:
-        logging.error("Request failed: %e", e)
+        ohlc =  Market().get_ohlc(pair, intervals[interval])
+
+    except (KrakenUnknownAssetError, KrakenUnknownAssetPairError, KrakenInvalidArgumentsError) as e:
+        logging.error('An unexpected error with %s occurred: %s', pair, str(e).replace('\n', ' '))
         return None
 
     data = []
-    for v in response['result'].values():
+    for v in ohlc.values():
         data = v
         break
 
@@ -184,18 +183,14 @@ def get_asset_data(pair):
     Raises:
         requests.RequestException: If there is an issue with the HTTP request.
     """
-    url_asset = "https://api.kraken.com/0/public/AssetPairs?pair=" + pair
-    headers = {
-        'Accept': 'application/json'
-    }
-
     try:
-        response = requests.get(url_asset, headers=headers, timeout=4).json()
-    except requests.RequestException as e:
-        logging.error("Request failed: %e", e)
+        data =  Market().get_asset_pairs(pair)
+
+    except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
+        logging.error('An unexpected error with %s occurred: %s', pair, str(e).replace('\n', ' '))
         return None
 
-    return response['result'] if 'result' in response else None
+    return data
 
 def get_ticker(pair):
     """
@@ -213,22 +208,13 @@ def get_ticker(pair):
     """
 
     logging.info("Fetching ticker data for %s...", pair)
-    url = "https://api.kraken.com/0/public/Ticker?pair=" + pair
-    headers = {'Accept': 'application/json'}
 
     try:
-        response = requests.get(url, headers=headers, timeout=4).json()
+        data = Market().get_ticker(pair)
 
-        if len(response['error']) > 0:
-            logging.error("Error: %s", response['error'])
-
-        if 'result' not in response:
-            logging.error("No result in response of ticker request.")
-
-    except requests.RequestException as e:
-        logging.error('Request failed: %s', e)
+    except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
+        logging.error('An unexpected error occurred: %s', e)
         return None
 
-    else:
-        logging.info("Ticker data fetched successfully.")
-        return response['result'] if 'result' in response else None
+    logging.info("Ticker data fetched successfully.")
+    return data

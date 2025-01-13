@@ -1,10 +1,10 @@
-"""This is the cryp2bot module."""
+"""This is the cryptoengine module."""
 
 import shutil
 import click
 from tabulate import tabulate
 from candlestick_chart import Candle, Chart
-import cryp2bot.kraken.marketdata as marketdata
+import cryptoengine.kraken.marketdata as marketdata
 
 
 @click.group()

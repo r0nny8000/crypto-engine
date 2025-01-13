@@ -1,4 +1,4 @@
-CRYP2-BOT
+crypto-engine
 =========
 
 This is a simple bot for trading crypto currencies on different exchanges and defi protocols.
@@ -27,9 +27,9 @@ Initialized poetry and intalled the dependecies.
 
 ```bash
 $ poetry init
-$ mkdir cryp2bot
-$ touch cryp2bot/cryp2bot.py
-$ touch cryp2bot/__init__.py
+$ mkdir cryptoengine
+$ touch cryptoengine/cryptoengine.py
+$ touch cryptoengine/__init__.py
 $ poetry install
 $ poerry shell
 $ which python
@@ -40,7 +40,7 @@ Set the python interpreter in VSCode to the version installed with poetry by usi
 It seems that this config file is not needed in .vscode/settings.json. The interpreter is selected automatically... sometimes.
 
     {
-        "python.defaultInterpreterPath": "/Users/me/Library/Caches/pypoetryvirtualenvs/cryp2bot-????????-py3.12/bin/python"
+        "python.defaultInterpreterPath": "/Users/me/Library/Caches/pypoetryvirtualenvs/cryptoengine-????????-py3.12/bin/python"
     }
 
 
@@ -48,7 +48,7 @@ Created the first test for the bot.
 
 ```bash
 $ mkdir tests
-$ touch tests/test_cryp2bot.py
+$ touch tests/test_cryptoengine.py
 $ poetry add --group dev pytest
 $ poetry shell
 $ pytest
@@ -59,7 +59,7 @@ To make the bot executable from the command line, I added the following code to 
 
 ```toml
 [tool.poetry.scripts]
-c2b = "cryp2bot.cryp2bot:main"
+c2b = "cryptoengine.cryptoengine:main"
 
 ```
 

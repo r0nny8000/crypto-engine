@@ -12,6 +12,28 @@ def cli():
     """add a group of commands to the command line interface."""
 
 
+
+@cli.command()
+@click.argument('pair', required=True)
+def value(pair):
+    """
+    Fetch and display the bid price for a given currency pair from the Kraken public API.
+
+    Args:
+        pair (str): A currency pair (e.g., 'BTCUSD').
+
+    Returns:
+        None: This function does not return a value. It prints the bid price to the console.
+    """
+
+    data = marketdata.value(pair)
+
+    if data is None:
+        click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
+        return
+
+    click.echo(data)
+
 @cli.command()
 @click.argument('currencies', required=True)
 def values(currencies):
@@ -72,28 +94,6 @@ def chart(pair, interval, volume):
     c.update_size(shutil.get_terminal_size().columns - 2, shutil.get_terminal_size().lines - 6)  # pylint: disable=line-too-long
     c.set_volume_pane_enabled(volume)
     c.draw()
-
-
-@cli.command()
-@click.argument('pair', required=True)
-def value(pair):
-    """
-    Fetch and display the bid price for a given currency pair from the Kraken public API.
-
-    Args:
-        pair (str): A currency pair (e.g., 'BTCUSD').
-
-    Returns:
-        None: This function does not return a value. It prints the bid price to the console.
-    """
-
-    data = marketdata.value(pair)
-
-    if data is None:
-        click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
-        return
-
-    click.echo(data)
 
 
 if __name__ == "__main__":

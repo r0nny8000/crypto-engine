@@ -10,7 +10,7 @@ from kraken.exceptions import * # pylint: disable=wildcard-import,unused-wildcar
 
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(levelname)-8s %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(funcName)-16s %(message)s')
 
 
 def value(pair):
@@ -24,14 +24,11 @@ def value(pair):
         float or None: The bid price for the currency pair, rounded to 2 decimal places, 
         or None if the pair is invalid or the ticker information could not be retrieved.
     """
-    if get_asset_data(pair) is None:
-        logging.error("%s is not a valid currency pair.", pair)
-        return None
 
     result = get_ticker(pair)
 
     if result is None:
-        logging.error("Failed to retrieve ticker information.")
+        logging.error("Failed to retrieve ticker information from Kraken.")
         return None
 
     asset_value = 0.0
@@ -106,10 +103,6 @@ def get_ohlc_data(pair, interval):
         requests.RequestException: If there is an issue with the HTTP request.
     """
 
-    if get_asset_data(pair) is None:
-        logging.error("%s is not a valid currency pair.", pair)
-        return None
-
     intervals = {}
     intervals['1m'] = 1
     intervals['5m'] = 5
@@ -125,8 +118,9 @@ def get_ohlc_data(pair, interval):
         ohlc =  Market().get_ohlc(pair, intervals[interval])
 
     except (KrakenUnknownAssetError, KrakenUnknownAssetPairError, KrakenInvalidArgumentsError) as e:
-        logging.error('An unexpected error with %s occurred: %s', pair, str(e).replace('\n', ' '))
+        logging.error('%s: %s', pair, str(e).replace('\n', ' '))
         return None
+
 
     data = []
     for v in ohlc.values():
@@ -139,12 +133,6 @@ def get_ohlc_data(pair, interval):
 def get_asset_name_left(pair):
     """
     Extracts the left part of the asset name from the given assets pair.
-
-    Args:
-        key (str): The key to look up in the assets dictionary.
-
-    Returns:
-        str: The name of the asset before the '/' character in the 'wsname' field.
     """
     asset = get_asset_data(pair)
     if asset is None:
@@ -155,13 +143,6 @@ def get_asset_name_left(pair):
 def get_asset_name_right(pair):
     """
     Extracts the asset value name from the given assets dictionary.
-
-    Args:
-        key (str): The key to look up in the assets dictionary.
-
-    Returns:
-        str: The name of the asset after the '/' character in the 'wsname' field, 
-        with 'XBT' replaced by 'BTC'.
     """
     asset = get_asset_data(pair)
     if asset is None:
@@ -184,13 +165,13 @@ def get_asset_data(pair):
         requests.RequestException: If there is an issue with the HTTP request.
     """
     try:
-        data =  Market().get_asset_pairs(pair)
+        asset_pairs =  Market().get_asset_pairs(pair)
 
     except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
-        logging.error('An unexpected error with %s occurred: %s', pair, str(e).replace('\n', ' '))
+        logging.error('%s: %s', pair, str(e).replace('\n', ' '))
         return None
 
-    return data
+    return asset_pairs
 
 def get_ticker(pair):
     """
@@ -210,11 +191,11 @@ def get_ticker(pair):
     logging.info("Fetching ticker data for %s...", pair)
 
     try:
-        data = Market().get_ticker(pair)
+        ticker = Market().get_ticker(pair)
 
     except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
-        logging.error('An unexpected error occurred: %s', e)
+        logging.error('%s: %s', pair, str(e).replace('\n', ' '))
         return None
 
     logging.info("Ticker data fetched successfully.")
-    return data
+    return ticker

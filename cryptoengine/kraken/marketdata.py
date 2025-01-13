@@ -168,7 +168,7 @@ def get_asset_data(pair):
         asset_pairs =  Market().get_asset_pairs(pair)
 
     except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
-        logging.error('%s: %s', pair, str(e).replace('\n', ' '))
+        logging.error('%s %s', pair, str(e).replace('\n', ' '))
         return None
 
     return asset_pairs

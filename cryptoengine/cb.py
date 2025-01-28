@@ -69,7 +69,8 @@ def values(currencies):
 @click.argument('pair', required=True)
 @click.option('--interval', '--i', show_default=True, default="1w", help="Display a candlestick chart for the given interval: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, 2w") # pylint: disable=line-too-long
 @click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.") # pylint: disable=line-too-long
-def chart(pair, interval, volume):
+@click.option('--heikin_ashi', '--ha', is_flag=True, flag_value=True, help="Display the Heikin-Ashi chart.") # pylint: disable=line-too-long
+def chart(pair, interval, volume, heikin_ashi):
     """
     Generates and displays a candlestick chart for a given trading pair and interval.
 
@@ -84,7 +85,21 @@ def chart(pair, interval, volume):
     data = marketdata.get_ohlc_data(pair, interval)
 
     candles = []
+    previous = {}
     for d in data:
+
+        d = [float(i) for i in d] # Convert all values to floats
+
+        if (heikin_ashi):
+            if not previous:
+                previous = d
+            else:
+                d[1] = (previous[1] + previous[4]) / 2
+                d[2] = max(d[2], d[1])
+                d[3] = min(d[3], d[1])
+                d[4] = (d[1] + d[2] + d[3] + d[4]) / 4
+                previous = d
+
         candles.append(
             Candle(timestamp=d[0], open=d[1], high=d[2], low=d[3], close=d[4], volume=d[6])
         )

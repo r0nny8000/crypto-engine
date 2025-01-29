@@ -5,7 +5,7 @@ import click
 from tabulate import tabulate
 from candlestick_chart import Candle, Chart
 import cryptoengine.kraken.marketdata as marketdata
-
+import cryptoengine.kraken.accountdata as accountdata
 
 @click.group()
 def cli():
@@ -67,7 +67,8 @@ def values(currencies):
 
 @cli.command()
 @click.argument('pair', required=True)
-@click.option('--interval', '--i', show_default=True, default="1w", help="Display a candlestick chart for the given interval: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, 2w") # pylint: disable=line-too-long
+@click.option('--interval', '--i', show_default=True, default="1w",
+              help="Display a candlestick chart for: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, 2w")
 @click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.") # pylint: disable=line-too-long
 @click.option('--heikin_ashi', '--ha', is_flag=True, flag_value=True, help="Display the Heikin-Ashi chart.") # pylint: disable=line-too-long
 def chart(pair, interval, volume, heikin_ashi):
@@ -109,6 +110,11 @@ def chart(pair, interval, volume, heikin_ashi):
     c.update_size(shutil.get_terminal_size().columns - 2, shutil.get_terminal_size().lines - 6)  # pylint: disable=line-too-long
     c.set_volume_pane_enabled(volume)
     c.draw()
+
+@cli.command()
+def balance():
+    """Get the balance of the account."""
+    accountdata.get_balance()
 
 
 if __name__ == "__main__":

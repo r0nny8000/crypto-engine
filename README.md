@@ -31,7 +31,7 @@ $ mkdir cryptoengine
 $ touch cryptoengine/cryptoengine.py
 $ touch cryptoengine/__init__.py
 $ poetry install
-$ poerry shell
+$ poetry shell
 $ which python
 ```
 

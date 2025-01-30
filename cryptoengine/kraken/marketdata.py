@@ -136,7 +136,7 @@ def get_asset_name_left(pair):
     """
     asset = get_asset_data(pair)
     if asset is None:
-        return pair
+        return None
     return asset[pair]['wsname'][:asset[pair]['wsname'].find('/')].replace('XBT', 'BTC')
 
 
@@ -146,7 +146,7 @@ def get_asset_name_right(pair):
     """
     asset = get_asset_data(pair)
     if asset is None:
-        return pair
+        return None
     return asset[pair]['wsname'][asset[pair]['wsname'].find('/')+1:].replace('XBT', 'BTC')
 
 

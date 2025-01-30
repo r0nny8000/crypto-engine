@@ -113,8 +113,29 @@ def chart(pair, interval, volume, heikin_ashi):
 
 @cli.command()
 def balance():
-    """Get the balance of the account."""
-    accountdata.get_balance()
+    """Get the balance of the account"""
+    b = accountdata.get_balance()
+
+    table = []
+    for key in b:
+        currency = marketdata.get_asset_name_left(key + "ZUSD")
+
+        if not currency:
+            currency = marketdata.get_asset_name_left(key + "USD")
+
+        row = [currency]
+        if not float(b[key]):
+            continue
+        row.append(b[key])
+        table.append(row)
+
+    click.echo(
+        tabulate(
+            table,
+            headers=["Currency", "Balance"],
+            tablefmt="rounded_grid"
+        )
+    )
 
 
 if __name__ == "__main__":

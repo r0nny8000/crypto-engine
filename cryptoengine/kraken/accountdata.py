@@ -1,3 +1,8 @@
+"""
+This module provides functionality to interact with the Kraken API 
+to fetch account balance information.
+"""
+
 import os
 from kraken.spot import User
 
@@ -12,5 +17,4 @@ def get_balance():
         key=os.getenv('KRAKEN_API_KEY'),
         secret=os.getenv('KRAKEN_API_SECRET')) # authenticated
 
-    print(user.get_account_balance())
-    print(user.get_balance(currency="EUR"))
+    return user.get_account_balance()

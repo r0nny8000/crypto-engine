@@ -9,8 +9,34 @@ from kraken.spot import Market
 from kraken.exceptions import * # pylint: disable=wildcard-import,unused-wildcard-import
 
 
-# Configure logging
 logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(funcName)-16s %(message)s')
+
+def get_ticker(pair):
+    """
+    Fetches ticker data for a given trading pair from the Kraken API.
+
+    Args:
+        pair (str): The trading pair for which to fetch ticker data (e.g., 'XXBTZUSD').
+
+    Returns:
+        dict or None: A dictionary containing the ticker data if the request is 
+        successful and the 'result' key is present in the response.
+        Returns None if the request fails or the 'result' key is not present in the response.
+    Raises:
+        requests.RequestException: If there is an issue with the HTTP request.
+    """
+
+    logging.info("Fetching ticker data for %s...", pair)
+
+    try:
+        ticker = Market().get_ticker(pair)
+
+    except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
+        logging.error('%s: %s', pair, str(e).replace('\n', ' '))
+        return None
+
+    logging.info("Ticker data fetched successfully.")
+    return ticker
 
 
 def value(pair):
@@ -24,7 +50,6 @@ def value(pair):
         float or None: The bid price for the currency pair, rounded to 2 decimal places, 
         or None if the pair is invalid or the ticker information could not be retrieved.
     """
-
     result = get_ticker(pair)
 
     if result is None:
@@ -35,6 +60,7 @@ def value(pair):
     for v in result.values():
         asset_value = float(v['b'][0])
     return round(asset_value, 2)
+
 
 def values(currencies):
     """
@@ -173,29 +199,3 @@ def get_asset_data(pair):
 
     return asset_pairs
 
-def get_ticker(pair):
-    """
-    Fetches ticker data for a given trading pair from the Kraken API.
-
-    Args:
-        pair (str): The trading pair for which to fetch ticker data (e.g., 'XXBTZUSD').
-
-    Returns:
-        dict or None: A dictionary containing the ticker data if the request is 
-        successful and the 'result' key is present in the response.
-        Returns None if the request fails or the 'result' key is not present in the response.
-    Raises:
-        requests.RequestException: If there is an issue with the HTTP request.
-    """
-
-    logging.info("Fetching ticker data for %s...", pair)
-
-    try:
-        ticker = Market().get_ticker(pair)
-
-    except (KrakenUnknownAssetError, KrakenUnknownAssetPairError) as e:
-        logging.error('%s: %s', pair, str(e).replace('\n', ' '))
-        return None
-
-    logging.info("Ticker data fetched successfully.")
-    return ticker

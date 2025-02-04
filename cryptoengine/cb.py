@@ -16,15 +16,7 @@ def cli():
 @cli.command()
 @click.argument('pair', required=True)
 def value(pair):
-    """
-    Fetch and display the bid price for a given currency pair from the Kraken public API.
-
-    Args:
-        pair (str): A currency pair (e.g., 'BTCUSD').
-
-    Returns:
-        None: This function does not return a value. It prints the bid price to the console.
-    """
+    """Fetch and display the bid price for a given currency pair from the Kraken public API."""
 
     data = marketdata.value(pair)
 
@@ -42,16 +34,7 @@ def value(pair):
 @click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.") # pylint: disable=line-too-long
 @click.option('--heikin_ashi', '--ha', is_flag=True, flag_value=True, help="Display the Heikin-Ashi chart.") # pylint: disable=line-too-long
 def chart(pair, interval, volume, heikin_ashi):
-    """
-    Generates and displays a candlestick chart for a given trading pair and interval.
-
-    Args:
-        pair (str): The trading pair to generate the chart for (e.g., 'BTC/USD').
-        interval (str): The time interval for the chart data (e.g., '1h', '1d').
-
-    Returns:
-        None
-    """
+    """Generates and displays a candlestick chart for a given trading pair and interval."""
 
     data = marketdata.get_ohlc_data(pair, interval)
 
@@ -83,7 +66,7 @@ def chart(pair, interval, volume, heikin_ashi):
 
 @cli.command()
 def balance():
-    """Get the balance of the account"""
+    """Get the balance of the account."""
     b = accountdata.get_balance()
 
     table = []

@@ -9,7 +9,7 @@ from kraken.spot import Market
 from kraken.exceptions import * # pylint: disable=wildcard-import,unused-wildcard-import
 
 
-logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(funcName)-16s %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s %(levelname)-8s %(funcName)-16s %(message)s', filename='/tmp/crypto-engine.log')
 
 def get_ticker(pair):
     """

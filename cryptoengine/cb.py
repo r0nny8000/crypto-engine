@@ -34,36 +34,6 @@ def value(pair):
 
     click.echo(data)
 
-@cli.command()
-@click.argument('currencies', required=True)
-def values(currencies):
-    """Get the values for a given currencies in USD, EUR, BTC and ETH (if available)."""
-
-    data = marketdata.values(currencies)
-
-    if data is None:
-        click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
-        return
-
-    # Prepare data for tabulate
-    table = []
-    for key in data:  # pylint: disable=consider-using-dict-items
-        row = [key]
-        row.append(data[key].get("EUR", "-"))
-        row.append(data[key].get("USD", "-"))
-        row.append(data[key].get("BTC", "-"))
-        row.append(data[key].get("ETH", "-"))
-        table.append(row)
-
-    # Print table using tabulate
-    click.echo(
-        tabulate(
-            table,
-            headers=["Currency", "EUR", "USD", "BTC", "ETH"],
-            tablefmt="rounded_grid"
-        )
-    )
-
 
 @cli.command()
 @click.argument('pair', required=True)
@@ -118,10 +88,10 @@ def balance():
 
     table = []
     for key in b:
-        currency = marketdata.get_asset_name_left(key + "ZUSD")
+        currency = marketdata.get_asset_name(key + "ZUSD")
 
         if not currency:
-            currency = marketdata.get_asset_name_left(key + "USD")
+            currency = marketdata.get_asset_name(key + "USD")
 
         row = [currency]
         if not float(b[key]):

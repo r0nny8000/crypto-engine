@@ -63,52 +63,6 @@ def value(pair):
     return round(asset_value, 2)
 
 
-def values(currencies):
-    """
-    Fetches and returns the bid prices for the given currency pairs from the Kraken public API.
-
-    Args:
-        currencies (str): A comma-separated string of currency pairs.
-
-    Returns:
-        dict: A dictionary with currency pairs as keys and their bid prices as values.
-    """
-    pairs = ""
-
-    for c in currencies.upper().split(','):
-        for a in ["EUR", "USD", "BTC", "ETH"]:
-            p = c + a
-            if get_asset_data(p) is None:
-                logging.error("%s is not a valid currency pair.", p)
-            else:
-                if len(pairs) > 0:
-                    pairs += ","
-                pairs += p
-
-    response = get_ticker(pairs)
-
-    if response is None:
-        return None
-
-    asset_values = {}
-
-    for pair in response:
-        asset_name_left = get_asset_name_left(pair)
-        asset_name_right = get_asset_name_right(pair)
-        asset_value = float(response[pair]['b'][0])
-
-        if asset_name_left not in asset_values:
-            asset_values[asset_name_left] = {}
-
-        if asset_name_right in ['EUR', 'USD']:
-            asset_value = round(asset_value, 2)
-        else:
-            asset_value = round(asset_value, 8)
-
-        asset_values[asset_name_left][asset_name_right] = asset_value
-
-    return asset_values
-
 def get_ohlc_data(pair, interval):
     """
     Fetches OHLC (Open, High, Low, Close) data for a given currency pair 
@@ -157,24 +111,23 @@ def get_ohlc_data(pair, interval):
     return data
 
 
-def get_asset_name_left(pair):
+def get_asset_name(pair):
     """
-    Extracts the left part of the asset name from the given assets pair.
+    Fetches the asset name for a given trading pair from the Kraken API.
     """
-    asset = get_asset_data(pair)
+
+    if len(pair) <= 4:
+        asset = get_asset_data(pair + 'ZUSD')
+
+        if asset is None:
+            asset = get_asset_data(pair + 'USD')
+    else:
+        asset = get_asset_data(pair)
+
     if asset is None:
         return None
-    return asset[pair]['wsname'][:asset[pair]['wsname'].find('/')].replace('XBT', 'BTC')
-
-
-def get_asset_name_right(pair):
-    """
-    Extracts the asset value name from the given assets dictionary.
-    """
-    asset = get_asset_data(pair)
-    if asset is None:
-        return None
-    return asset[pair]['wsname'][asset[pair]['wsname'].find('/')+1:].replace('XBT', 'BTC')
+    else:
+        return asset[pair]['wsname'][:asset[pair]['wsname'].find('/')].replace('XBT', 'BTC')
 
 
 def get_asset_data(pair):

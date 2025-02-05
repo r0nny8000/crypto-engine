@@ -18,7 +18,7 @@ def cli():
 def value(pair):
     """Fetch and display the bid price for a given currency pair from the Kraken public API."""
 
-    data = marketdata.value(pair)
+    data = marketdata.get_value(pair)
 
     if data is None:
         click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
@@ -71,21 +71,30 @@ def balance():
 
     table = []
     for key in b:
-        currency = marketdata.get_asset_name(key + "ZUSD")
 
-        if not currency:
-            currency = marketdata.get_asset_name(key + "USD")
+        # first column is the currency name
+        row = [marketdata.get_asset_name(key)]
 
-        row = [currency]
-        if not float(b[key]):
-            continue
-        row.append(b[key])
+        # second column is the balance
+        quantity = float(b[key])
+        if not quantity:
+            continue # Skip zero balances
+        row.append(quantity)
+
+        # third column is the balance in EUR
+        current_value = marketdata.get_value(key + "EUR")
+        if not current_value:
+            current_value = marketdata.get_value(key + "ZEUR")
+        if current_value:
+            row.append(round(quantity * current_value, 2))
+
+        # finally, add the row to the table
         table.append(row)
 
     click.echo(
         tabulate(
             table,
-            headers=["Currency", "Balance"],
+            headers=["Currency", "Balance", "EUR"],
             tablefmt="rounded_grid"
         )
     )

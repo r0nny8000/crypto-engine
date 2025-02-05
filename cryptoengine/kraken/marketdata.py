@@ -40,7 +40,7 @@ def get_ticker(pair):
     return ticker
 
 
-def value(pair):
+def get_value(pair):
     """
     Fetches and returns the bid price for a given currency pair from the Kraken public API.
 
@@ -127,7 +127,12 @@ def get_asset_name(pair):
     if asset is None:
         return None
     else:
-        return asset[pair]['wsname'][:asset[pair]['wsname'].find('/')].replace('XBT', 'BTC')
+        for a in asset.values():
+            wsname = a['wsname']
+            name = wsname[:wsname.find('/')]
+            return name.replace('XBT', 'BTC')
+
+        return None
 
 
 def get_asset_data(pair):

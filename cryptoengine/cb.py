@@ -112,12 +112,13 @@ def open():
         click.echo(click.style("No open orders.", fg="green"))
         return
 
-def get_time(timestamp):
+
+def convert_time(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 @cli.command()
 def closed():
-    """Get the open orders of the account."""
+    """Get the closed orders of the account."""
     closed_orders = accountdata.get_closed_orders()
     
     if not closed_orders:
@@ -138,8 +139,8 @@ def closed():
             order["vol"],
             order["cost"],
             order["fee"],
-            get_time(order["opentm"]),
-            get_time(order["closetm"])
+            convert_time(order["opentm"]),
+            convert_time(order["closetm"])
         ]
 
         table.append(row)

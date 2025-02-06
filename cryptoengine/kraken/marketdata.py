@@ -54,7 +54,6 @@ def get_value(pair):
     result = get_ticker(pair)
 
     if result is None:
-        logging.error("Failed to retrieve ticker information from Kraken.")
         return None
 
     asset_value = 0.0

@@ -128,7 +128,7 @@ def closed():
     table = []
     for order_key in closed_orders["closed"]:
         order = closed_orders["closed"][order_key]
-        print(order)
+
         row = [
             order_key,
             order["status"],

@@ -70,21 +70,21 @@ def balance():
     b = accountdata.get_balance()
 
     table = []
-    for key in b:
+    for asset in b:
 
         # first column is the currency name
-        row = [marketdata.get_asset_name(key)]
+        row = [marketdata.get_asset_name(asset)]
 
         # second column is the balance
-        quantity = float(b[key])
+        quantity = float(b[asset])
         if not quantity:
             continue # Skip zero balances
         row.append(quantity)
 
         # third column is the balance in EUR
-        current_value = marketdata.get_value(key + "EUR")
+        current_value = marketdata.get_value(asset + "EUR")
         if not current_value:
-            current_value = marketdata.get_value(key + "ZEUR")
+            current_value = marketdata.get_value(asset + "ZEUR")
         if current_value:
             row.append(round(quantity * current_value, 2))
 

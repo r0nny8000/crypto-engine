@@ -120,9 +120,6 @@ def closed():
     """Get the open orders of the account."""
     closed_orders = accountdata.get_closed_orders()
     
-    print(json.dumps(closed_orders, indent=4))
-    print(" ")
-
     if not closed_orders:
         click.echo(click.style("No open orders.", fg="green"))
         return
@@ -150,7 +147,10 @@ def closed():
     click.echo(
         tabulate(
             table,
-            headers=["Order ID", "Status", "Pair", "Type", "Order Type", "Price", "Volume", "Cost", "Fee", "Open Time", "Close Time"],
+            headers=[
+                "Order ID", "Status", "Pair", "Type", "Order Type", 
+                "Price", "Volume", "Cost", "Fee", "Open Time", "Close Time"
+            ],
             tablefmt="rounded_grid"
         )
     )

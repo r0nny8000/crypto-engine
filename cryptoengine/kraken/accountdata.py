@@ -18,3 +18,29 @@ def get_balance():
         secret=os.getenv('KRAKEN_API_SECRET')) # authenticated
 
     return user.get_account_balance()
+
+def get_closed_orders():
+    """
+    Fetches and prints the closed orders from Kraken.
+
+    This function authenticates the user using API key and secret from environment variables,
+    then retrieves and prints the closed orders.
+    """
+    user = User(
+        key=os.getenv('KRAKEN_API_KEY'),
+        secret=os.getenv('KRAKEN_API_SECRET')) # authenticated
+
+    return user.get_closed_orders()
+
+def get_open_orders():
+    """
+    Fetches and prints the open orders from Kraken.
+
+    This function authenticates the user using API key and secret from environment variables,
+    then retrieves and prints the open orders.
+    """
+    user = User(
+        key=os.getenv('KRAKEN_API_KEY'),
+        secret=os.getenv('KRAKEN_API_SECRET')) # authenticated
+
+    return user.get_open_orders()

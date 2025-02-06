@@ -6,6 +6,9 @@ from tabulate import tabulate
 from candlestick_chart import Candle, Chart
 import cryptoengine.kraken.marketdata as marketdata
 import cryptoengine.kraken.accountdata as accountdata
+from datetime import datetime
+import json
+
 
 @click.group()
 def cli():
@@ -99,6 +102,58 @@ def balance():
         )
     )
 
+@cli.command()
+def open():
+    """Get the open orders of the account."""
+    open_orders = accountdata.get_open_orders()
+    
+    print(open_orders)
+    if not open_orders:
+        click.echo(click.style("No open orders.", fg="green"))
+        return
+
+def get_time(timestamp):
+    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+@cli.command()
+def closed():
+    """Get the open orders of the account."""
+    closed_orders = accountdata.get_closed_orders()
+    
+    print(json.dumps(closed_orders, indent=4))
+    print(" ")
+
+    if not closed_orders:
+        click.echo(click.style("No open orders.", fg="green"))
+        return
+
+    table = []
+    for order_key in closed_orders["closed"]:
+        order = closed_orders["closed"][order_key]
+        print(order)
+        row = [
+            order_key,
+            order["status"],
+            order["descr"]["pair"],
+            order["descr"]["type"],
+            order["descr"]["ordertype"],
+            order["descr"]["price"],
+            order["vol"],
+            order["cost"],
+            order["fee"],
+            get_time(order["opentm"]),
+            get_time(order["closetm"])
+        ]
+
+        table.append(row)
+
+    click.echo(
+        tabulate(
+            table,
+            headers=["Order ID", "Status", "Pair", "Type", "Order Type", "Price", "Volume", "Cost", "Fee", "Open Time", "Close Time"],
+            tablefmt="rounded_grid"
+        )
+    )
 
 if __name__ == "__main__":
     cli()  # Call the main function to start the command line interface.

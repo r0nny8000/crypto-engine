@@ -7,7 +7,6 @@ from candlestick_chart import Candle, Chart
 import cryptoengine.kraken.marketdata as marketdata
 import cryptoengine.kraken.accountdata as accountdata
 from datetime import datetime
-import json
 
 
 @click.group()

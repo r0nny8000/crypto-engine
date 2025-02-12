@@ -105,6 +105,7 @@ def balance():
 
 
 def convert_time(timestamp):
+    """Convert a Unix timestamp to a human-readable date and time string."""
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 

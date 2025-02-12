@@ -146,7 +146,7 @@ def orders(all_orders):
             row.append(convert_time(order["closetm"]))
 
         table.append(row)
-    
+
 
     table.reverse()
 
@@ -157,6 +157,7 @@ def orders(all_orders):
                 "Order ID", "Status", "Pair", "Type", "Order Type", 
                 "Price", "Volume", "Cost", "Fee", "Open Time", "Close Time"
             ],
+            missingval="-",
             tablefmt="rounded_grid"
         )
     )

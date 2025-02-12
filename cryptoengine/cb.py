@@ -1,12 +1,12 @@
 """This is the cryptoengine module."""
 
+from datetime import datetime
 import shutil
 import click
 from tabulate import tabulate
 from candlestick_chart import Candle, Chart
 import cryptoengine.kraken.marketdata as marketdata
 import cryptoengine.kraken.accountdata as accountdata
-from datetime import datetime
 
 
 @click.group()
@@ -46,7 +46,7 @@ def chart(pair, interval, volume, heikin_ashi):
 
         d = [float(i) for i in d] # Convert all values to floats
 
-        if (heikin_ashi):
+        if heikin_ashi:
             if not previous:
                 previous = d
             else:
@@ -102,7 +102,6 @@ def balance():
     )
 
 
-
 def convert_time(timestamp):
     """Convert a Unix timestamp to a human-readable date and time string."""
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
@@ -112,7 +111,7 @@ def convert_time(timestamp):
 @click.option('--all_orders', '--a', is_flag=True, flag_value=True, help="Include all orders.") # pylint: disable=line-too-long
 def orders(all_orders):
     """Retrieves and displays a table of open and optionally closed orders."""
-    
+
     open_orders = accountdata.get_open_orders()
     closed_orders = accountdata.get_closed_orders()
 
@@ -122,7 +121,8 @@ def orders(all_orders):
         latest_orders.update(closed_orders["closed"])
     else:
         for closed_order_key, closed_order in closed_orders["closed"].items():
-            if datetime.now().timestamp() - closed_order["closetm"] < 2592000:  # 2592000 seconds = 30 days
+            if datetime.now().timestamp() - closed_order["closetm"] < 2592000:
+                # 2592000 s = 30 days
                 latest_orders.update({closed_order_key: closed_order})
 
     table = []

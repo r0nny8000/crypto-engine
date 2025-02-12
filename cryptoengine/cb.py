@@ -102,32 +102,32 @@ def balance():
         )
     )
 
-@cli.command()
-def open():
-    """Get the open orders of the account."""
-    open_orders = accountdata.get_open_orders()
-    
-    print(open_orders)
-    if not open_orders:
-        click.echo(click.style("No open orders.", fg="green"))
-        return
 
 
 def convert_time(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
+
 @cli.command()
-def closed():
-    """Get the closed orders of the account."""
-    closed_orders = accountdata.get_closed_orders()
+@click.option('--all_orders', '--a', is_flag=True, flag_value=True, help="Include all orders.") # pylint: disable=line-too-long
+def orders(all_orders):
+    """Retrieves and displays a table of open and optionally closed orders."""
     
-    if not closed_orders:
-        click.echo(click.style("No open orders.", fg="green"))
-        return
+    open_orders = accountdata.get_open_orders()
+    closed_orders = accountdata.get_closed_orders()
+
+    latest_orders = {}
+    latest_orders.update(open_orders["open"])
+    if all_orders:
+        latest_orders.update(closed_orders["closed"])
+    else:
+        for closed_order_key, closed_order in closed_orders["closed"].items():
+            if datetime.now().timestamp() - closed_order["closetm"] < 2592000:  # 2592000 seconds = 30 days
+                latest_orders.update({closed_order_key: closed_order})
 
     table = []
-    for order_key in closed_orders["closed"]:
-        order = closed_orders["closed"][order_key]
+    for order_key, order in latest_orders.items():
+        order = latest_orders[order_key]
 
         row = [
             order_key,
@@ -139,11 +139,16 @@ def closed():
             order["vol"],
             order["cost"],
             order["fee"],
-            convert_time(order["opentm"]),
-            convert_time(order["closetm"])
+            convert_time(order["opentm"])
         ]
 
+        if "closetm" in order.keys():
+            row.append(convert_time(order["closetm"]))
+
         table.append(row)
+    
+
+    table.reverse()
 
     click.echo(
         tabulate(
@@ -155,6 +160,7 @@ def closed():
             tablefmt="rounded_grid"
         )
     )
+
 
 if __name__ == "__main__":
     cli()  # Call the main function to start the command line interface.

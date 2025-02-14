@@ -5,8 +5,8 @@ import shutil
 import click
 from tabulate import tabulate
 from candlestick_chart import Candle, Chart
-import cryptoengine.kraken.marketdata as marketdata
-import cryptoengine.kraken.accountdata as accountdata
+from cryptoengine.kraken import marketdata
+from cryptoengine.kraken import accountdata
 
 
 @click.group()
@@ -112,18 +112,7 @@ def convert_time(timestamp):
 def orders(all_orders):
     """Retrieves and displays a table of open and optionally closed orders."""
 
-    open_orders = accountdata.get_open_orders()
-    closed_orders = accountdata.get_closed_orders()
-
-    latest_orders = {}
-    latest_orders.update(open_orders["open"])
-    if all_orders:
-        latest_orders.update(closed_orders["closed"])
-    else:
-        for closed_order_key, closed_order in closed_orders["closed"].items():
-            if datetime.now().timestamp() - closed_order["closetm"] < 2592000:
-                # 2592000 s = 30 days
-                latest_orders.update({closed_order_key: closed_order})
+    latest_orders = accountdata.get_orders(all_orders)
 
     table = []
     for order_key, order in latest_orders.items():
@@ -162,6 +151,29 @@ def orders(all_orders):
         )
     )
 
+def buy(pair, volume):
+
+    """
+    cb buy eth 1.50
+
+    kaufe ETH für 1.50 EUR
+
+    Defaults:
+    - Pair EUR (optional)
+    - Type Limit (always)
+
+    Checks
+    - Pair exists
+    - current price for the limit
+    - enough balance
+
+    same with sell
+    """
+
+    if True:
+        click.echo(click.style("Order created successfully.", fg="green"))
+    else:
+        click.echo(click.style("Failed to create order.", fg="red"))
 
 if __name__ == "__main__":
     cli()  # Call the main function to start the command line interface.

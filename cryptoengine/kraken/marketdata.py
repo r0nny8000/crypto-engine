@@ -10,7 +10,7 @@ from kraken.exceptions import * # pylint: disable=wildcard-import,unused-wildcar
 
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)-8s %(funcName)-16s %(message)s"
-logging.basicConfig(level=logging.WARNING, format=LOGGING_FORMAT, filename="/tmp/crypto-engine.log")
+logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT, filename="/tmp/crypto-engine.log")
 
 
 def get_asset_name(pair):

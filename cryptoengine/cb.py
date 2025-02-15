@@ -84,10 +84,8 @@ def balance():
         row.append(quantity)
 
         # third column is the balance in EUR
-        current_value = marketdata.get_value(asset + "EUR")
-        if not current_value:
-            current_value = marketdata.get_value(asset + "ZEUR")
-        if current_value:
+        current_value = marketdata.get_value(asset)
+        if current_value and asset != "ZEUR":
             row.append(round(quantity * current_value, 2))
 
         # finally, add the row to the table
@@ -151,7 +149,7 @@ def orders(all_orders):
         )
     )
 
-def buy(pair, volume):
+def buy(asset, volume, currency):
 
     """
     cb buy eth 1.50

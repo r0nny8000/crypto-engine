@@ -21,3 +21,22 @@ def test_get_asset_data():
     assert marketdata.get_asset_data("EUR")
 
     assert not marketdata.get_asset_data("XXXXXX")
+
+def test_get_value():
+    """Test the `get_value` function from the `marketdata` module."""
+
+    assert marketdata.get_value("BTCEUR")
+    assert marketdata.get_value("BTCUSD")
+    assert marketdata.get_value("BTC")
+
+    assert marketdata.get_value("SOLEUR")
+    assert marketdata.get_value("SOLUSD")
+    assert marketdata.get_value("SOL")
+
+    assert marketdata.get_value("ETHEUR")
+    assert marketdata.get_value("ETHUSD")
+    assert marketdata.get_value("ETH")
+
+    assert marketdata.get_value("EUR")
+
+    assert not marketdata.get_value("XXXXXX")

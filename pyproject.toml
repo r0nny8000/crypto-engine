@@ -20,7 +20,7 @@ pytest = "^8.2.2"
 pylint = "^3.2.3"
 
 [tool.poetry.scripts]
-cb = "cryptoengine.cb:cli"
+ce = "cryptoengine.ce:cli"
 
 [build-system]
 requires = ["poetry-core"]

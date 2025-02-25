@@ -7,7 +7,7 @@ from tabulate import tabulate
 from candlestick_chart import Candle, Chart
 from cryptoengine.kraken import marketdata
 from cryptoengine.kraken import accountdata
-import json
+
 
 @click.group()
 def cli():
@@ -151,61 +151,12 @@ def orders(all_orders):
 def buy(asset, volume, currency):
     """Buy an asset with a given volume and currency."""
 
-    print(asset, volume, currency)
+    click.echo("Buying %s with %s %s...", asset, volume, currency)
 
-    # Check if the asset exists
-    asset = marketdata.get_asset_data(asset + currency)
-
-    if not asset:
-        click.echo(click.style("Invalid asset pair.", fg="red"))
-        return
-
-    # Chech if the volume is a valid number
-    try:
-        volume = float(volume)
-    except ValueError:
-        click.echo(click.style("Invalid volume.", fg="red"))
-        return
-
-    # Check if the user has enough balance
-    b = accountdata.get_balance()
-    print(b)
-
-    pair = None
-    for k in asset.keys(): 
-        pair = k
-        break
-
-    quote = None
-    for a in asset.values():
-        quote = a["quote"]
-        break
-
-    # Check if the quote currency exists in the balance
-    if quote not in b.keys():
-        click.echo(click.style("No balance for the selected currency " + currency + ".", fg="red"))
-        return
-
-    # Check if the user has enough balance
-    if float(b[quote]) < volume:
-        click.echo(click.style("Insufficient balance of " + currency + ".", fg="red"))
-        return
-
-    # Get the current value for the limit order
-    #price = marketdata.get_value(pair)
-    price = 10
-
-    # Create a limit order
+    transaction = accountdata.buy(asset, volume, currency)
     
-    transaction = accountdata.create_order(pair=pair,
-                                            side="buy",
-                                            volume=volume,
-                                            ordertype="limit",
-                                            price=price)
-
-
     if transaction:
-        click.echo(click.style("Order created successfully: " + str(transaction) + ".", fg="green"))
+        click.echo(click.style("Created order successfully: " + str(transaction['descr']['order']) + ".", fg="green"))
     else:
         click.echo(click.style("Failed to create order.", fg="red"))
 

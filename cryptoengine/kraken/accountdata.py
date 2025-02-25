@@ -5,10 +5,14 @@ to fetch account balance information.
 
 from datetime import datetime
 import os
-from kraken.spot import User
+import logging
+from kraken.spot import User, Trade
 
+LOGGING_FORMAT = "%(asctime)s %(levelname)-8s %(funcName)-16s %(message)s"
+logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT, filename="/tmp/crypto-engine.log")
 
-user = User(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET')) # authenticated
+user = User(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET')) 
+trade = Trade(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET'))
 
 def get_balance():
     """Fetches and returns the account balance from Kraken."""
@@ -40,3 +44,17 @@ def get_closed_orders():
 def get_open_orders():
     """Fetches and prints the open orders from Kraken."""
     return user.get_open_orders()
+
+def create_order(pair, side, volume, ordertype, price):
+    """Creates an order on Kraken."""
+    try:
+        transaction = trade.create_order(pair=pair,
+                                        side=side,
+                                        volume=volume,
+                                        ordertype=ordertype,
+                                        price=price)
+    except ValueError as e:   
+        logging.error('%s %s', pair, str(e).replace('\n', ' '))
+        return None
+
+    return transaction

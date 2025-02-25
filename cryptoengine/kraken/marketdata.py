@@ -52,6 +52,7 @@ def get_asset_data(pair):
     return  asset_pairs
 
 def get_asset_pairs(pair):
+    """Fetches asset pairs from Kraken API, handling specific errors."""
 
     try:
 

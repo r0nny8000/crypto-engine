@@ -7,7 +7,7 @@ from tabulate import tabulate
 from candlestick_chart import Candle, Chart
 from cryptoengine.kraken import marketdata
 from cryptoengine.kraken import accountdata
-
+import json
 
 @click.group()
 def cli():
@@ -100,11 +100,6 @@ def balance():
     )
 
 
-def convert_time(timestamp):
-    """Convert a Unix timestamp to a human-readable date and time string."""
-    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-
-
 @cli.command()
 @click.option('--all_orders', '--a', is_flag=True, flag_value=True, help="Include all orders.") # pylint: disable=line-too-long
 def orders(all_orders):
@@ -126,11 +121,11 @@ def orders(all_orders):
             order["vol"],
             order["cost"],
             order["fee"],
-            convert_time(order["opentm"])
+            datetime.fromtimestamp(order["opentm"]).strftime('%Y-%m-%d %H:%M:%S')
         ]
 
         if "closetm" in order.keys():
-            row.append(convert_time(order["closetm"]))
+            row.append(datetime.fromtimestamp(order["opentm"]).strftime('%Y-%m-%d %H:%M:%S'))
 
         table.append(row)
 
@@ -149,27 +144,68 @@ def orders(all_orders):
         )
     )
 
+@cli.command()
+@click.argument('asset', required=True)
+@click.argument('volume', required=True)
+@click.argument('currency', required=False, default="EUR")
 def buy(asset, volume, currency):
+    """Buy an asset with a given volume and currency."""
 
-    """
-    cb buy eth 1.50
+    print(asset, volume, currency)
 
-    kaufe ETH für 1.50 EUR
+    # Check if the asset exists
+    asset = marketdata.get_asset_data(asset + currency)
 
-    Defaults:
-    - Pair EUR (optional)
-    - Type Limit (always)
+    if not asset:
+        click.echo(click.style("Invalid asset pair.", fg="red"))
+        return
 
-    Checks
-    - Pair exists
-    - current price for the limit
-    - enough balance
+    # Chech if the volume is a valid number
+    try:
+        volume = float(volume)
+    except ValueError:
+        click.echo(click.style("Invalid volume.", fg="red"))
+        return
 
-    same with sell
-    """
+    # Check if the user has enough balance
+    b = accountdata.get_balance()
+    print(b)
 
-    if True:
-        click.echo(click.style("Order created successfully.", fg="green"))
+    pair = None
+    for k in asset.keys(): 
+        pair = k
+        break
+
+    quote = None
+    for a in asset.values():
+        quote = a["quote"]
+        break
+
+    # Check if the quote currency exists in the balance
+    if quote not in b.keys():
+        click.echo(click.style("No balance for the selected currency " + currency + ".", fg="red"))
+        return
+
+    # Check if the user has enough balance
+    if float(b[quote]) < volume:
+        click.echo(click.style("Insufficient balance of " + currency + ".", fg="red"))
+        return
+
+    # Get the current value for the limit order
+    #price = marketdata.get_value(pair)
+    price = 10
+
+    # Create a limit order
+    
+    transaction = accountdata.create_order(pair=pair,
+                                            side="buy",
+                                            volume=volume,
+                                            ordertype="limit",
+                                            price=price)
+
+
+    if transaction:
+        click.echo(click.style("Order created successfully: " + str(transaction) + ".", fg="green"))
     else:
         click.echo(click.style("Failed to create order.", fg="red"))
 

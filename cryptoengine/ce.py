@@ -129,7 +129,6 @@ def orders(all_orders):
 
         table.append(row)
 
-
     table.reverse()
 
     click.echo(
@@ -151,7 +150,7 @@ def orders(all_orders):
 def buy(asset, volume, currency):
     """Buy an asset with a given volume and currency."""
 
-    click.echo("Buying %s with %s %s...", asset, volume, currency)
+    click.echo('Buying %s with %s %s...' % (asset, volume, currency))
 
     transaction = accountdata.buy(asset, volume, currency)
     

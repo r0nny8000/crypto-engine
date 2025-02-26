@@ -120,7 +120,8 @@ def create_order(pair, side, volume, ordertype, limit_price):
                                         side=side,
                                         volume=volume,
                                         ordertype=ordertype,
-                                        price=limit_price)
+                                        price=limit_price,
+                                        expiretm='+120')
     except Exception as e:
         logging.error('%s %s', pair, str(e).replace('\n', ' '))
         print(e)

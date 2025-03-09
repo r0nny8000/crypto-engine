@@ -31,7 +31,7 @@ def value(pair):
 
 @cli.command()
 @click.argument('pair', required=True)
-@click.option('--interval', '--i', show_default=True, default="1w",
+@click.option('--interval', '--i', show_default=True, default="1d",
               help="Display a candlestick chart for: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, 2w")
 @click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.") # pylint: disable=line-too-long
 @click.option('--heikin_ashi', '--ha', is_flag=True, flag_value=True, help="Display the Heikin-Ashi chart.") # pylint: disable=line-too-long
@@ -39,6 +39,10 @@ def chart(pair, interval, volume, heikin_ashi):
     """Generates and displays a candlestick chart for a given trading pair and interval."""
 
     data = marketdata.get_ohlc_data(pair, interval)
+
+    if not data:
+        click.echo(click.style("Failed to retrieve OHLC data. Maybe the asset or pair is unknown.", fg="red"))
+        return
 
     candles = []
     previous = {}

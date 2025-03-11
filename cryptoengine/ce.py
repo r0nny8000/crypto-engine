@@ -147,6 +147,7 @@ def orders(all_orders):
         )
     )
 
+
 @cli.command()
 @click.argument('asset', required=True)
 @click.argument('volume', required=True)
@@ -162,6 +163,22 @@ def buy(asset, volume, currency):
         click.echo(click.style("Created order successfully: " + str(transaction['descr']['order']) + ".", fg="green"))
     else:
         click.echo(click.style("Failed to create order.", fg="red"))
+
+@cli.command()
+@click.argument('asset', required=True)
+@click.argument('volume', required=True)
+def dca(asset, volume):
+    """Dollar cost average into an asset with a given volume."""
+
+    click.echo('Dollar cost averaging into %s with %s EUR...', asset, volume)
+
+    transaction = accountdata.dca(asset, volume)
+    
+    if transaction:
+        click.echo(click.style("Created order successfully: " + str(transaction['descr']['order']) + ".", fg="green"))
+    else:
+        click.echo(click.style("Failed to create order.", fg="red"))
+
 
 if __name__ == "__main__":
     cli()  # Call the main function to start the command line interface.

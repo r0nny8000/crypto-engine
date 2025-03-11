@@ -107,10 +107,13 @@ def buy(asset, volume, currency):
         logging.error('The asset volume of %s is too small. Volume needs to be higher than 0.002.', asset_volume)
         return None
 
-
     # Create a limit order
     return create_order(pair, 'buy', asset_volume, 'limit', round(limit_price / 10, 2))
 
+
+
+def dca(asset, volume):
+    return None
 
 
 def create_order(pair, side, volume, ordertype, limit_price):

@@ -108,12 +108,16 @@ def buy(asset, volume, currency):
         return None
 
     # Create a limit order
+    # TASK: check an environment variable to see if we are in a test environment
+    # TASK: if we are in a test environment, reduce the limit price by 10x
     return create_order(pair, 'buy', asset_volume, 'limit', round(limit_price / 10, 2))
 
 
 
 def dca(asset, volume):
-    return None
+    """Creates a DCA buy order on Kraken."""
+    # TASK: Implement this function
+    return buy(asset, volume, 'EUR')
 
 
 def create_order(pair, side, volume, ordertype, limit_price):

@@ -1,5 +1,5 @@
 """
-This module provides functionality to interact with the Kraken API 
+This module provides functionality to interact with the Kraken API
 to fetch account balance information.
 """
 
@@ -12,7 +12,7 @@ from cryptoengine.kraken import marketdata
 LOGGING_FORMAT = "%(asctime)s %(levelname)-8s %(funcName)-16s %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT, filename="/tmp/crypto-engine.log")
 
-user = User(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET')) 
+user = User(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET'))
 trade = Trade(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET'))
 
 def get_balance():
@@ -34,7 +34,7 @@ def get_orders(all_orders=False):
             if datetime.now().timestamp() - closed_order["closetm"] < 2592000:
                 # 2592000 s = 30 days
                 latest_orders.update({closed_order_key: closed_order})
-    
+
     return latest_orders
 
 
@@ -65,7 +65,7 @@ def buy(asset, volume, currency):
     except ValueError:
         logging.error('Invalid volume %s.', volume)
         return None
-    
+
     if volume < 1:
         logging.error('The volume of %s is too small. Volume needs to be higher than 1.', volume)
         return None
@@ -104,7 +104,7 @@ def buy(asset, volume, currency):
     asset_volume = round(volume / marketdata.get_value(pair), 4)
 
     if asset_volume < 0.002:
-        logging.error('The asset volume of %s is too small. Volume needs to be higher than 0.002.', asset_volume)
+        logging.error('The asset volume of %s is too small. It must be > 0.002.', asset_volume)
         return None
 
     # Create a limit order
@@ -124,12 +124,12 @@ def create_order(pair, side, volume, ordertype, limit_price):
     """Creates an order on Kraken."""
     try:
         transaction = trade.create_order(pair=pair,
-                                        side=side,
-                                        volume=volume,
-                                        ordertype=ordertype,
-                                        price=limit_price,
-                                        expiretm='+120')
-    except Exception as e:
+                                         side=side,
+                                         volume=volume,
+                                         ordertype=ordertype,
+                                         price=limit_price,
+                                         expiretm='+120')  # pylint: disable=line-too-long
+    except Exception as e:  # pylint: disable=broad-except
         logging.error('%s %s', pair, str(e).replace('\n', ' '))
         print(e)
         return None

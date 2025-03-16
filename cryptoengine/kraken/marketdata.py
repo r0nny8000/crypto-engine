@@ -42,7 +42,7 @@ def get_asset_data(pair):
 
         if not asset_pairs:
             asset_pairs = get_asset_pairs(pair + 'ZUSD')
-        
+
         if not asset_pairs:
             asset_pairs = get_asset_pairs(pair + 'USD')
 
@@ -52,7 +52,7 @@ def get_asset_data(pair):
     return  asset_pairs
 
 def get_asset_pairs(pair):
-    """Fetches asset pairs from Kraken API, handling specific errors."""
+    """Fetches asset pairs from Kraken API handling specific errors."""
 
     try:
 
@@ -80,7 +80,7 @@ def get_value(pair):
 
         if not result:
             result = get_ticker(pair + 'ZUSD')
-        
+
         if not result:
             result = get_ticker(pair + 'USD')
 
@@ -115,7 +115,7 @@ def get_ticker(pair):
 
 
 def get_ohlc_data(pair, interval):
-    """Fetches OHLC (Open, High, Low, Close) data for a given currency pair 
+    """Fetches OHLC (Open, High, Low, Close) data for a given currency pair
     and interval from the Kraken API."""
 
     intervals = {}

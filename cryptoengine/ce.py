@@ -14,7 +14,6 @@ def cli():
     """add a group of commands to the command line interface."""
 
 
-
 @cli.command()
 @click.argument('pair', required=True)
 def value(pair):
@@ -23,7 +22,8 @@ def value(pair):
     data = marketdata.get_value(pair)
 
     if data is None:
-        click.echo(click.style("Failed to retrieve ticker information.", fg="red"))
+        click.echo(click.style(
+            "Failed to retrieve ticker information.", fg="red"))
         return
 
     click.echo(data)
@@ -33,22 +33,23 @@ def value(pair):
 @click.argument('pair', required=True)
 @click.option('--interval', '--i', show_default=True, default="1d",
               help="Display a candlestick chart for: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, 2w")
-@click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.") # pylint: disable=line-too-long
-@click.option('--heikin_ashi', '--ha', is_flag=True, flag_value=True, help="Display the Heikin-Ashi chart.") # pylint: disable=line-too-long
+@click.option('--volume', '--v', is_flag=True, flag_value=True, help="Display the volume.")  # pylint: disable=line-too-long
+@click.option('--heikin_ashi', '--ha', is_flag=True, flag_value=True, help="Display the Heikin-Ashi chart.")  # pylint: disable=line-too-long
 def chart(pair, interval, volume, heikin_ashi):
     """Generates and displays a candlestick chart for a given trading pair and interval."""
 
     data = marketdata.get_ohlc_data(pair, interval)
 
     if not data:
-        click.echo(click.style("Failed to retrieve OHLC data. Maybe the asset or pair is unknown.", fg="red"))
+        click.echo(click.style(
+            "Failed to retrieve OHLC data. Maybe the asset or pair is unknown.", fg="red"))
         return
 
     candles = []
     previous = {}
     for d in data:
 
-        d = [float(i) for i in d] # Convert all values to floats
+        d = [float(i) for i in d]  # Convert all values to floats
 
         if heikin_ashi:
             if not previous:
@@ -61,14 +62,17 @@ def chart(pair, interval, volume, heikin_ashi):
                 previous = d
 
         candles.append(
-            Candle(timestamp=d[0], open=d[1], high=d[2], low=d[3], close=d[4], volume=d[6])
+            Candle(timestamp=d[0], open=d[1], high=d[2],
+                   low=d[3], close=d[4], volume=d[6])
         )
 
     # Optional keyword arguments: title, width, height
     c = Chart(candles, title=pair.upper())
-    c.update_size(shutil.get_terminal_size().columns - 2, shutil.get_terminal_size().lines - 6)  # pylint: disable=line-too-long
+    c.update_size(shutil.get_terminal_size().columns - 2,
+                  shutil.get_terminal_size().lines - 6)  # pylint: disable=line-too-long
     c.set_volume_pane_enabled(volume)
     c.draw()
+
 
 @cli.command()
 def balance():
@@ -84,7 +88,7 @@ def balance():
         # second column is the balance
         quantity = float(b[asset])
         if not quantity:
-            continue # Skip zero balances
+            continue  # Skip zero balances
         row.append(quantity)
 
         # third column is the balance in EUR
@@ -92,7 +96,7 @@ def balance():
         if current_value and asset != "ZEUR":
             row.append(round(quantity * current_value, 2))
 
-        # finally, add the row to the table
+        # finally, add the row to the table:
         table.append(row)
 
     click.echo(
@@ -105,7 +109,7 @@ def balance():
 
 
 @cli.command()
-@click.option('--all_orders', '--a', is_flag=True, flag_value=True, help="Include all orders.") # pylint: disable=line-too-long
+@click.option('--all_orders', '--a', is_flag=True, flag_value=True, help="Include all orders.")  # pylint: disable=line-too-long
 def orders(all_orders):
     """Retrieves and displays a table of open and optionally closed orders."""
 
@@ -125,11 +129,13 @@ def orders(all_orders):
             order["vol"],
             order["cost"],
             order["fee"],
-            datetime.fromtimestamp(order["opentm"]).strftime('%Y-%m-%d %H:%M:%S')
+            datetime.fromtimestamp(order["opentm"]).strftime(
+                '%Y-%m-%d %H:%M:%S')
         ]
 
         if "closetm" in order.keys():
-            row.append(datetime.fromtimestamp(order["opentm"]).strftime('%Y-%m-%d %H:%M:%S'))
+            row.append(datetime.fromtimestamp(
+                order["opentm"]).strftime('%Y-%m-%d %H:%M:%S'))
 
         table.append(row)
 
@@ -139,7 +145,7 @@ def orders(all_orders):
         tabulate(
             table,
             headers=[
-                "Order ID", "Status", "Pair", "Type", "Order Type", 
+                "Order ID", "Status", "Pair", "Type", "Order Type",
                 "Price", "Volume", "Cost", "Fee", "Open Time", "Close Time"
             ],
             missingval="-",
@@ -158,11 +164,13 @@ def buy(asset, volume, currency):
     click.echo('Buying %s with %s %s...' % (asset, volume, currency))
 
     transaction = accountdata.buy(asset, volume, currency)
-    
+
     if transaction:
-        click.echo(click.style("Created order successfully: " + str(transaction['descr']['order']) + ".", fg="green"))
+        click.echo(click.style("Created order successfully: " +
+                   str(transaction['descr']['order']) + ".", fg="green"))
     else:
         click.echo(click.style("Failed to create order.", fg="red"))
+
 
 @cli.command()
 @click.argument('asset', required=True)
@@ -173,12 +181,13 @@ def dca(asset, volume):
     click.echo('Dollar cost averaging into %s with %s EUR...', asset, volume)
 
     transaction = accountdata.dca(asset, volume)
-    
+
     if transaction:
-        click.echo(click.style("Created order successfully: " + str(transaction['descr']['order']) + ".", fg="green"))
+        click.echo(click.style("Created order successfully: " +
+                   str(transaction['descr']['order']) + ".", fg="green"))
     else:
         click.echo(click.style("Failed to create order.", fg="red"))
 
 
 if __name__ == "__main__":
-    cli()  # Call the main function to start the command line interface.
+    cli()  # Call the main function to start the command line interface..

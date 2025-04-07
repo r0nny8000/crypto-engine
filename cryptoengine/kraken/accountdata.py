@@ -10,14 +10,20 @@ from kraken.spot import User, Trade
 from cryptoengine.kraken import marketdata
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)-8s %(funcName)-16s %(message)s"
-logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT, filename="/tmp/crypto-engine.log")
+logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT,
+                    filename="/tmp/crypto-engine.log")
 
-user = User(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET'))
-trade = Trade(key=os.getenv('KRAKEN_API_KEY'), secret=os.getenv('KRAKEN_API_SECRET'))
+user = User(key=os.getenv('KRAKEN_API_KEY'),
+            secret=os.getenv('KRAKEN_API_SECRET'))
+trade = Trade(key=os.getenv('KRAKEN_API_KEY'),
+              secret=os.getenv('KRAKEN_API_SECRET'))
+limit_factor = os.getenv('KRAKEN_LIMIT_FACTOR', '1')
+
 
 def get_balance():
     """Fetches and returns the account balance from Kraken."""
     return user.get_account_balance()
+
 
 def get_orders(all_orders=False):
     """Fetches and prints the orders from Kraken."""
@@ -42,6 +48,7 @@ def get_closed_orders():
     """Fetches and prints the closed orders from Kraken."""
     return user.get_closed_orders()
 
+
 def get_open_orders():
     """Fetches and prints the open orders from Kraken."""
     return user.get_open_orders()
@@ -49,7 +56,6 @@ def get_open_orders():
 
 def buy(asset, volume, currency):
     """Creates a buy order on Kraken."""
-
 
     # Check if the asset exists
     asset = marketdata.get_asset_data(asset + currency)
@@ -67,7 +73,8 @@ def buy(asset, volume, currency):
         return None
 
     if volume < 1:
-        logging.error('The volume of %s is too small. Volume needs to be higher than 1.', volume)
+        logging.error(
+            'The volume of %s is too small. Volume needs to be higher than 1.', volume)
         return None
 
     # Check if the user has enough balance
@@ -97,21 +104,24 @@ def buy(asset, volume, currency):
     limit_price = round(marketdata.get_value(pair) * 1.001, 2)
 
     if not limit_price:
-        logging.error('Did not get limit price for the selected currency %s ', currency)
+        logging.error(
+            'Did not get limit price for the selected currency %s ', currency)
         return None
 
     # translate currency to assest => volume
     asset_volume = round(volume / marketdata.get_value(pair), 4)
 
     if asset_volume < 0.002:
-        logging.error('The asset volume of %s is too small. It must be > 0.002.', asset_volume)
+        logging.error(
+            'The asset volume of %s is too small. It must be > 0.002.', asset_volume)
         return None
 
-    # Create a limit order
-    # TASK: check an environment variable to see if we are in a test environment
-    # TASK: if we are in a test environment, reduce the limit price by 10x
-    return create_order(pair, 'buy', asset_volume, 'limit', round(limit_price / 10, 2))
+    # Check if the limit factor is set and adjust the limit price
+    # this avoids buying assets on non production environments
+    limit_price = limit_price * float(limit_factor)
 
+    # Create a limit order
+    return create_order(pair, 'buy', asset_volume, 'limit', round(limit_price, 2))
 
 
 def dca(asset, volume):

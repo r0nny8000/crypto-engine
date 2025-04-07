@@ -155,11 +155,18 @@ def orders(all_orders):
 
 
 @cli.command()
-@click.argument('asset', required=True)
-@click.argument('volume', required=True)
-@click.argument('currency', required=False, default="EUR")
+@click.argument('asset', required=True, type=click.STRING)
+@click.argument('volume', required=True, type=click.FLOAT)
+@click.argument('currency', required=False, type=click.STRING, default="EUR")
 def buy(asset, volume, currency):
-    """Buy an asset with a given volume and currency."""
+    """Buy an asset with a given volume and currency.
+
+    \b
+    ASSET to buy, eg. ETH, BTC, XRP. (left part of the pair)
+    VOLUME of the asset to buy with the exchange currency, eg EUR or USD(T).
+    CURRENCY to use for the purchase. Default is EUR. (right part of the pair)
+
+    """
 
     click.echo('Buying %s with %s %s...' % (asset, volume, currency))
 

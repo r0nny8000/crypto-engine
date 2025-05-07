@@ -124,12 +124,6 @@ def buy(asset, volume, currency):
     return create_order(pair, 'buy', asset_volume, 'limit', round(limit_price, 2))
 
 
-def dca(asset, volume):
-    """Creates a DCA buy order on Kraken."""
-    # TASK: Implement this function
-    return buy(asset, volume, 'EUR')
-
-
 def create_order(pair, side, volume, ordertype, limit_price):
     """Creates an order on Kraken."""
     try:
